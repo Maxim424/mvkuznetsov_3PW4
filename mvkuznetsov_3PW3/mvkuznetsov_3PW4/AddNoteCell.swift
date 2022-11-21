@@ -7,10 +7,12 @@
 
 import UIKit
 
-final class AddNoteCell: UITableViewCell {
+class AddNoteCell: UITableViewCell {
     static let reuseIdentifier = "AddNoteCell"
     private var textView = UITextView()
-    public var addButton = UIButton()
+    private var addButton = UIButton()
+    public var delegate: AddNoteDelegate?
+    private var placeholderLabel = UILabel()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -33,15 +35,24 @@ final class AddNoteCell: UITableViewCell {
         textView.textColor = .tertiaryLabel
         textView.backgroundColor = .clear
         textView.setHeight(140)
-               
+        
+        textView.delegate = self
+        placeholderLabel.text = "Enter some text..."
+        placeholderLabel.font = .systemFont(ofSize: 14, weight: .regular)
+        placeholderLabel.sizeToFit()
+        textView.addSubview(placeholderLabel)
+        placeholderLabel.textColor = .tertiaryLabel
+        placeholderLabel.frame.origin = CGPoint(x: 5, y: (textView.font?.pointSize ?? 0) / 2)
+        placeholderLabel.isHidden = !textView.text.isEmpty
+        
         addButton.setTitle("Add new note", for: .normal)
         addButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
         addButton.setTitleColor(.systemBackground, for: .normal)
         addButton.backgroundColor = .label
         addButton.layer.cornerRadius = 8
         addButton.setHeight(44)
-        addButton.addTarget(self, action: #selector(addButtonTapped(_:)), for: .touchUpInside)
-        addButton.isEnabled = false
+        addButton.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)
+        addButton.isEnabled = true
         addButton.alpha = 0.5
         
         let stackView = UIStackView(arrangedSubviews: [textView, addButton])
@@ -55,7 +66,18 @@ final class AddNoteCell: UITableViewCell {
     }
     
     @objc
-    private func addButtonTapped(_ sender: UIButton) {
-        
+    private func addButtonTapped() {
+        delegate?.newNoteAdded(note: ShortNote(text: textView.text))
+    }
+    
+    public func ResetText() {
+        textView.text = ""
+        placeholderLabel.isHidden = !textView.text.isEmpty
+    }
+}
+
+extension AddNoteCell: UITextViewDelegate {
+    func textViewDidChange(_ textView: UITextView) {
+            placeholderLabel.isHidden = !textView.text.isEmpty
     }
 }

@@ -10,7 +10,11 @@ import UIKit
 final class NotesViewController: UIViewController {
     
     private let tableView = UITableView(frame: .zero, style: .insetGrouped)
-    private var dataSource = [ShortNote]()
+    private var dataSource = [
+        ShortNote(text: "a"),
+        ShortNote(text: "b"),
+        ShortNote(text: "c")
+    ]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,9 +42,10 @@ final class NotesViewController: UIViewController {
     }
     
     private func setupTableView() {
-        tableView.register(NoteCell.self, forCellReuseIdentifier: NoteCell.reuseIdentifier)
         
-        view.addSubview(tableView)
+        tableView.register(NoteCell.self, forCellReuseIdentifier: NoteCell.reuseIdentifier)
+        tableView.register(AddNoteCell.self, forCellReuseIdentifier: AddNoteCell.reuseIdentifier)
+        
         tableView.backgroundColor = .clear
         tableView.keyboardDismissMode = .onDrag
         tableView.dataSource = self
@@ -51,13 +56,17 @@ final class NotesViewController: UIViewController {
     }
     
     private func handleDelegate(indexPath: IndexPath) {
-        dataSource.remove(at: indexPath.row)
-        tableView.reloadData()
+        if (indexPath.section != 0) {
+            dataSource.remove(at: indexPath.row)
+            tableView.reloadData()
+        } else {
+            (tableView.cellForRow(at: indexPath) as? AddNoteCell)?.ResetText()
+        }
     }
     
     @objc
     private func dismissViewController(_ sender: UIButton) {
-        self.view.window?.rootViewController = WelcomeViewController()
+        self.dismiss(animated: true, completion: nil)
     }
 }
 
@@ -112,4 +121,8 @@ extension NotesViewController : AddNoteDelegate {
         dataSource.insert(note, at: 0)
         tableView.reloadData()
     }
+}
+
+protocol AddNoteDelegate : AnyObject {
+    func newNoteAdded(note: ShortNote)
 }

@@ -16,6 +16,7 @@ final class WelcomeViewController: UIViewController, ChangeColorProtocol {
     private let valueLabel = UILabel()
     private let incrementButton = UIButton()
     private var value: Int = 0
+    private let notesViewController = NotesViewController()
     
     private func setupView() {
         view.backgroundColor = .systemGray6
@@ -90,8 +91,8 @@ final class WelcomeViewController: UIViewController, ChangeColorProtocol {
         let generator = UIImpactFeedbackGenerator(style: .light)
         generator.impactOccurred()
         
-        let notesViewController = NotesViewController()
-        self.view.window?.rootViewController = notesViewController
+        let navigationControllet = UINavigationController(rootViewController: notesViewController)
+        present(navigationControllet, animated: true, completion: nil)
     }
     
     @objc
