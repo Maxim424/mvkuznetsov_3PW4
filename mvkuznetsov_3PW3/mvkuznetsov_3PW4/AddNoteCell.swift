@@ -9,10 +9,10 @@ import UIKit
 
 class AddNoteCell: UITableViewCell {
     static let reuseIdentifier = "AddNoteCell"
-    private var textView = UITextView()
-    private var addButton = UIButton()
+    private let textView = UITextView()
+    private let addButton = UIButton()
+    private let placeholderLabel = UILabel()
     public var delegate: AddNoteDelegate?
-    private var placeholderLabel = UILabel()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
