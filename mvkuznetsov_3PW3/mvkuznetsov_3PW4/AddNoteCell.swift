@@ -67,7 +67,9 @@ class AddNoteCell: UITableViewCell {
     
     @objc
     private func addButtonTapped() {
-        delegate?.newNoteAdded(note: ShortNote(text: textView.text))
+        if (!textView.text.isEmpty) {
+            delegate?.newNoteAdded(note: ShortNote(text: textView.text))
+        }
     }
     
     public func ResetText() {
